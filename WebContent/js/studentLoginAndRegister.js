@@ -77,6 +77,21 @@ $(function() {
 				var studentPwd = $("#pwd").val();
 				var studentClassId = $("#classId").val();
 				// alert(studentName+studentAccount+studentPwd+studentClassId);
+				if (studentClassId.trim() == null || studentClassId.trim() == "") {
+					zeroModal.show({
+						title : "提示",
+						content : "请输入真实姓名!",
+						width : '200px',
+						height : '130px',
+						overlay : false,
+						ok : true,
+						onClosed : function() {
+							$("#classId").val("");
+							$("#classId").get(0).focus();
+						}
+					});
+					return false;
+				}
 				if (studentName.trim() == null || studentName.trim() == "") {
 					zeroModal.show({
 						title : "提示",

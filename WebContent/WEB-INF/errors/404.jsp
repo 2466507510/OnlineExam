@@ -12,6 +12,7 @@
 			+ path;
 %>
 <c:set var="path" value="<%=basePath%>"></c:set>
+<link href="${path }/images/reception/index.png" rel="shortcut icon" type="image/x-icon" />
 <link rel="stylesheet" href="${path }/js/jquery404/css/404.css" />
 </head>
 <body>
