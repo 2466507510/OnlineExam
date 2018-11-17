@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijj.exam.dao.GradeInfoMapper">
+	<select id="getAllGrades" resultType="com.lijj.exam.pojo.GradeInfo">
+		select * from gradeinfo
+	</select>
+	<insert id="addGrade" parameterType="java.lang.String">
+		insert into gradeinfo(gradeName) values(#{gradeName})
+	</insert>
+	<delete id="deleteGrade" parameterType="java.lang.Integer">
+		delete from gradeinfo where gradeId = #{gradeID}
+	</delete>
+	<update id="updateGrade" parameterType="com.lijj.exam.pojo.GradeInfo">
+		update gradeInfo set gradeName=#{gradeName} where gradeId=#{gradeId}
+	</update>
+</mapper>

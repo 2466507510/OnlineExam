@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijj.exam.dao.ClassInfoMapper">
+	<resultMap type="com.lijj.exam.pojo.ClassInfo" id="queryClasses">
+		<id column="classId" property="classId"/>
+		<result column="className" property="className"/>
+		<association property="gradeInfo" javaType="com.lijj.exam.pojo.GradeInfo">
+			<id column="gradeId" property="gradeId" />
+			<result column="gradeName" property="gradeName" />
+		</association>
+		<association property="teacherInfo" javaType="com.lijj.exam.pojo.TeacherInfo">
+			<id column="teacherId" property="teacherId"/>
+			<result column="teacherName" property="teacherName"/>
+		</association>
+	</resultMap>
+	<select id="getStudentRegisterClassSelect" resultType="com.lijj.exam.pojo.ClassInfo">
+		select classId,className from classinfo
+	</select>
+	<select id="getClassesByGradeId" parameterType="java.lang.Integer" resultType="com.lijj.exam.pojo.ClassInfo">
+		select * from classinfo where gradeId=#{gradeId}
+	</select>
+	<select id="getClassByClassId" parameterType="java.lang.Integer" resultMap="queryClasses">
+		select * from classinfo c,gradeInfo g,teacherinfo t where c.gradeId=g.gradeId and c.teacherId=t.teacherId and c.classId=#{classId}
+	</select>
+	<select id="getAllClasses" resultMap="queryClasses">
+		select * from classinfo c,gradeInfo g,teacherinfo t where c.gradeId=g.gradeId and c.teacherId=t.teacherId
+	</select>
+	<insert id="addClass" parameterType="com.lijj.exam.pojo.ClassInfo">
+		insert into classinfo values(NULL,#{className},#{gradeInfo.gradeId},#{teacherInfo.teacherId})
+	</insert>
+	<update id="updateClass" parameterType="java.util.Map">
+		update classinfo set className=#{className},gradeId=#{gradeId},teacherId=#{teacherId} where classId=#{classId}
+	</update>
+	<delete id="deleteClass" parameterType="java.lang.Integer">
+		delete from classinfo where classId=#{classId}
+	</delete>
+	<select id="getStudentCountByClass" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select c.className,count(s.studentId) studentCount
+		from classinfo c
+		left join studentinfo s on c.classId=s.classId
+		<where>
+			<if test="_parameter!=null">
+				c.gradeId=#{_parameter}
+			</if>
+		</where>
+		group by s.classId
+		order by c.classId
+	</select>
+</mapper>

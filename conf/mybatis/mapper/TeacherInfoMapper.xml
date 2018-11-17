@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijj.exam.dao.TeacherInfoMapper">
+	<resultMap type="com.lijj.exam.pojo.TeacherInfo" id="queryTeachers">
+		<id property="teacherId" column="teacherId"/>
+		<result property="teacherName" column="teacherName"/>
+		<result property="teacherAccount" column="teacherAccount"/>
+		<result property="teacherPwd" column="teacherPwd"/>
+		<result property="adminPower" column="adminPower"/>
+		<result property="isWork" column="isWork"/>
+		<association property="classInfo" javaType="com.lijj.exam.pojo.ClassInfo">
+			<id property="classId" column="classId"/>
+			<result property="className" column="className"/>
+		</association>
+	</resultMap>
+
+	<select id="getTeacher" resultType="com.lijj.exam.pojo.TeacherInfo" parameterType="java.lang.String">
+		select * from teacherInfo where teacherAccount=#{teacherAccount}
+	</select>
+	<select id="getTeacherTotal" resultType="java.lang.Integer">
+		select count(teacherId) from teacherInfo
+	</select>
+	<select id="getTeachersByWork" resultType="com.lijj.exam.pojo.TeacherInfo">
+		select * from teacherinfo where isWork=0
+	</select>
+	<update id="updateTeacherWorkById" parameterType="com.lijj.exam.pojo.TeacherInfo">
+		update teacherinfo set isWork=#{isWork} where teacherId=#{teacherId}
+	</update>
+	<select id="getAllTeachers" resultMap="queryTeachers">
+		select t.*,c.classId,c.className from teacherinfo t
+		left join classinfo c on t.teacherId=c.teacherId
+	</select>
+</mapper>

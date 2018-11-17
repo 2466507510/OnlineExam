@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijj.exam.dao.StudentInfoMapper">
+
+	<resultMap type="com.lijj.exam.pojo.StudentInfo"
+		id="queryStudent">
+		<id column="studentId" property="studentId" />
+		<result column="studentName" property="studentName" />
+		<result column="studentPwd" property="studentPwd" />
+		<result column="studentAccount" property="studentAccount" />
+		<!-- 班级 -->
+		<association property="classInfo"
+			javaType="com.lijj.exam.pojo.ClassInfo">
+			<id column="classId" property="classId" />
+			<result column="className" property="className" />
+		</association>
+		<!-- 年级 -->
+		<association property="gradeInfo"
+			javaType="com.lijj.exam.pojo.GradeInfo">
+			<id column="gradeId" property="gradeId" />
+			<result column="gradeName" property="gradeName" />
+		</association>
+	</resultMap>
+
+	<select id="getStudent"
+		resultType="com.lijj.exam.pojo.StudentInfo"
+		parameterType="java.lang.String">
+		select * from studentinfo where
+		studentAccount=#{studentAccount}
+	</select>
+	<insert id="studentRegister"
+		parameterType="com.lijj.exam.pojo.StudentInfo">
+		insert into
+		studentinfo(studentName,studentAccount,studentPwd,classId)
+		values(#{studentName},#{studentAccount},#{studentPwd},#{classInfo.classId})
+	</insert>
+	<select id="getStudentById" resultMap="queryStudent"
+		parameterType="java.lang.Integer">
+		select s.*,c.className,g.gradeId,g.gradeName
+		from
+		studentInfo s,classInfo c,gradeInfo g
+		where s.studentId=#{studentId}
+		and s.classId=c.classId and c.gradeId=g.gradeId
+	</select>
+	<update id="resetStudentPwd" parameterType="com.lijj.exam.pojo.StudentInfo">
+		update studentInfo set studentPwd=#{studentPwd} where studentId=#{studentId}
+	</update>
+	<select id="getStudentTotal" resultType="java.lang.Integer">
+		select count(studentId) from studentInfo
+	</select>
+
+</mapper>
